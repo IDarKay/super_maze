@@ -260,7 +260,7 @@ void labyrinth_render(SDL_Renderer *renderer, const labyrinth *lab, const player
     SDL_RenderFillRect(renderer, &rect);
 
     // render players
-    if (player2 != NULL && *player1 == *player2) {
+    if (player1 != NULL && player2 != NULL && *player1 == *player2) {
         // if both player is on same case
         SDL_SetRenderDrawColor(renderer, 169, 62, 184, SDL_ALPHA_OPAQUE);
         SDL_RenderFillRect(renderer, &(SDL_Rect) {(int) (*player1 % lab->width) * case_size + case_size / 4 + render_rec->x1,
@@ -272,11 +272,14 @@ void labyrinth_render(SDL_Renderer *renderer, const labyrinth *lab, const player
                                                   case_size / 4, case_size / 2});
     } else {
 
-        SDL_SetRenderDrawColor(renderer, 169, 62, 184, SDL_ALPHA_OPAQUE);
-        rect = (SDL_Rect) {(int) (*player1 % lab->width) * case_size + case_size / 4 + render_rec->x1,
-                           (int) (*player1 / lab->width) * case_size + case_size / 4 + render_rec->y1,
-                           case_size / 2, case_size / 2};
-        SDL_RenderFillRect(renderer, &rect);
+        if (player1 != NULL)
+        {
+            SDL_SetRenderDrawColor(renderer, 169, 62, 184, SDL_ALPHA_OPAQUE);
+            rect = (SDL_Rect) {(int) (*player1 % lab->width) * case_size + case_size / 4 + render_rec->x1,
+                               (int) (*player1 / lab->width) * case_size + case_size / 4 + render_rec->y1,
+                               case_size / 2, case_size / 2};
+            SDL_RenderFillRect(renderer, &rect);
+        }
 
         if (player2 != NULL) {
             SDL_SetRenderDrawColor(renderer, 161, 171, 48, SDL_ALPHA_OPAQUE);
@@ -415,6 +418,7 @@ BOOL labyrinth_solve(labyrinth *self, int end_index, BOOL step_by_step) {
 
 void labyrinth_destroy(labyrinth *self) {
     // free
+    if (self == NULL) return;
 
     if (self->generator_tmp != NULL) {
         free(self->generator_tmp);

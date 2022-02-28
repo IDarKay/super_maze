@@ -8,10 +8,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "SDL2/SDL.h"
+#include <SDL2/SDL.h>
 
-#define MAP_WIDTH 50
-#define MAP_HEIGHT 50
+
+#define MAP_WIDTH 120
+#define MAP_HEIGHT 120
 
 #define DEFAULT_WIN_WIDTH 920
 #define DEFAULT_WIN_HEIGHT 920

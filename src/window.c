@@ -9,7 +9,12 @@ window* window_create(int windowX, int windowY) {
 
     window* self = malloc(sizeof(window));
 
-    self->mods = MAIN_MENU;
+    self->quit = SDL_FALSE;
+    self->mods = NONE;
+    self->mainScreen = NULL;
+    self->e_labyrinth = NULL;
+    self->p_labyrinth = NULL;
+
     self->window_rec = (rec) {0, 0, windowX, windowY};
 
     self->window = SDL_CreateWindow(
@@ -29,6 +34,9 @@ window* window_create(int windowX, int windowY) {
     }
 
     self->renderer = SDL_CreateRenderer(self->window, -1, SDL_RENDERER_SOFTWARE);
+    SDL_SetRenderDrawBlendMode(self->renderer, SDL_BLENDMODE_BLEND);
+
+    window_main_menu(self);
 
     return self;
 }
@@ -36,22 +44,22 @@ window* window_create(int windowX, int windowY) {
 
 void window_loop_start(window *self) {
     SDL_Event event;
-    SDL_bool quit = SDL_FALSE;
+
 
     // main loop
-    while (!quit) {
+    while (!self->quit) {
         while(SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT)
-                quit = SDL_TRUE;
+                self->quit = SDL_TRUE;
             else if (event.type == SDL_WINDOWEVENT) {
                 if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
                     self->window_rec = (rec) {0, 0, event.window.data1, event.window.data2};
+                    if (self->mainScreen != NULL) main_screen_screen_resize(self->mainScreen, event.window.data1, event.window.data2);
                 }
             } else if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE && self->mods != MAIN_MENU) {
                     window_main_menu(self);
-                }
-                else if (self->mods == MAIN_MENU) {
+                } else if (self->mods == MAIN_MENU) {
                     if (event.key.keysym.scancode == SDL_SCANCODE_Z || event.key.keysym.scancode == SDL_SCANCODE_A || event.key.keysym.scancode == SDL_SCANCODE_M) {
                         self->mods = PLAYABLE_LAB;
                         self->p_labyrinth = playable_labyrinth_create(self, MAP_WIDTH, MAP_HEIGHT,
@@ -75,6 +83,8 @@ void window_loop_start(window *self) {
             playable_labyrinth_render(self->p_labyrinth,self->renderer, &self->window_rec);
         } else if (self->mods == EDITABLE_LAB) {
             editable_labyrinth_render(self->e_labyrinth, self->renderer, &self->window_rec);
+        } else if (self->mods == MAIN_MENU) {
+            main_screen_render(self->mainScreen, self->renderer, &self->window_rec);
         }
 
         SDL_RenderPresent(self->renderer);
@@ -83,14 +93,20 @@ void window_loop_start(window *self) {
 }
 
 void window_main_menu(window* self) {
-    self->mods = MAIN_MENU;
+    if (self->mods != MAIN_MENU || self->mainScreen == NULL) {
+        self->mods = MAIN_MENU;
 
-    if (self->p_labyrinth != NULL) {
-        playable_labyrinth_destroy(self->p_labyrinth);
-        self->p_labyrinth = NULL;
-    } else if (self->e_labyrinth != NULL) {
-        editable_labyrinth_destroy(self->e_labyrinth);
-        self->e_labyrinth = NULL;
+        if (self->p_labyrinth != NULL) {
+            playable_labyrinth_destroy(self->p_labyrinth);
+            self->p_labyrinth = NULL;
+        } else if (self->e_labyrinth != NULL) {
+            editable_labyrinth_destroy(self->e_labyrinth);
+            self->e_labyrinth = NULL;
+        }
+        if (self->mainScreen == NULL) {
+            self->mainScreen = main_screen_create(self->window_rec.x2 - self->window_rec.x1, self->window_rec.y2 - self->window_rec.y1, self->renderer);
+            if (!self->mainScreen) self->quit = SDL_TRUE;
+        }
     }
 }
 
@@ -98,6 +114,7 @@ void window_destroy(window *self) {
     // free mem
     if (self->p_labyrinth != NULL) playable_labyrinth_destroy(self->p_labyrinth);
     if (self->e_labyrinth != NULL) editable_labyrinth_destroy(self->e_labyrinth);
+    if (self->mainScreen != NULL) main_screen_destroy(self->mainScreen);
 
     if (self->window != NULL) SDL_DestroyWindow(self->window);
     if (self->renderer != NULL) SDL_DestroyRenderer(self->renderer);

@@ -18,7 +18,7 @@ add_executable(laby ${PROJECT_SOURCES} ${PROJECT_HEADERS})
 target_link_libraries(laby ${SDL2_LIBRARIES})
 
 if(MSVC)
-    target_compile_options(labyPRIVATE /W4 /WX)
+    target_compile_options(laby PRIVATE /W4 /WX)
 else()
     target_compile_options(laby PRIVATE -Wall)
 endif()

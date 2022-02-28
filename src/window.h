@@ -8,8 +8,10 @@
 #include "utils.h"
 #include "mods/playable_labyrinth.h"
 #include "mods/editable_labyrinth.h"
+#include "mods/main_screen.h"
 
 enum mods {
+    NONE,
     MAIN_MENU,
     PLAYABLE_LAB,
     EDITABLE_LAB
@@ -36,6 +38,9 @@ struct window {
     // possible mods
     playable_labyrinth* p_labyrinth;
     editable_labyrinth* e_labyrinth;
+    main_screen* mainScreen;
+
+    SDL_bool quit;
 
 };
 
