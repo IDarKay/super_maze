@@ -441,7 +441,7 @@ void labyrinth_calc_path(labyrinth *self, uint32 start_index) {
     uint32 index = start_index;
     direction direction;
 
-    while (distance != 1) {
+    while (distance > 1) {
         distance = labyrinth_get_distance(self, index);
         self->cases[index] |= IS_IN_PATH_MASK;
 

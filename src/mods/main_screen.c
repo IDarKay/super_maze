@@ -89,4 +89,5 @@ void main_screen_destroy(main_screen *self) {
         SDL_DestroyTexture(self->logo);
         self->logo = NULL;
     }
+    free(self);
 }

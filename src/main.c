@@ -12,6 +12,7 @@ int main() {
 
     // destroy every think
     window_destroy(window);
+
     SDL_Quit();
 
     // exit

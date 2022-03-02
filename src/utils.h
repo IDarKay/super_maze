@@ -11,8 +11,8 @@
 #include <SDL2/SDL.h>
 
 
-#define MAP_WIDTH 120
-#define MAP_HEIGHT 120
+#define MAP_WIDTH 30
+#define MAP_HEIGHT 30
 
 #define DEFAULT_WIN_WIDTH 920
 #define DEFAULT_WIN_HEIGHT 920

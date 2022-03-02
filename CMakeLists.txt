@@ -5,7 +5,7 @@ project(laby C)
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
-
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
 
 
 file(GLOB_RECURSE PROJECT_SOURCES ./src/*.c)
