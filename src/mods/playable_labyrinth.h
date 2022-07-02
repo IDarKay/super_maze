@@ -25,7 +25,7 @@ struct playable_labyrinth {
 
 typedef struct playable_labyrinth playable_labyrinth;
 
-playable_labyrinth* playable_labyrinth_create(struct window* window, uint32 width, uint32 height, BOOL is_animated, BOOL two_player);
+playable_labyrinth* playable_labyrinth_create(struct window* window, uint32 width, uint32 height, BOOL is_animated, BOOL two_player, BOOL use_file);
 
 void playable_labyrinth_key_press(playable_labyrinth* self, const SDL_Keysym* key);
 

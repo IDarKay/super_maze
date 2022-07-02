@@ -2,29 +2,41 @@
 // Created by alice on 22/02/2022.
 //
 
+#include <unistd.h>
 #include "playable_labyrinth.h"
 #include "../window.h"
 
-playable_labyrinth *playable_labyrinth_create(struct window *window, uint32 width, uint32 height, BOOL is_animated, BOOL two_player) {
+playable_labyrinth *playable_labyrinth_create(struct window *window, uint32 width, uint32 height, BOOL is_animated, BOOL two_player, BOOL use_file) {
     playable_labyrinth *self = malloc(sizeof(playable_labyrinth));
 
     self->is_animated = is_animated;
     self->window = window;
-    self->labyrinth = labyrinth_create(width, height, two_player);
-//    self->labyrinth = labyrinth_create_from_file("save_test.lab", FALSE);
-    if (is_animated)
-        self->need_generate = TRUE;
-    else {
-        labyrinth_generator_Kruskal(self->labyrinth, FALSE);
-        self->need_generate = FALSE;
+    if (use_file && access("save_test.lab", F_OK) == 0) {
+        self->labyrinth = labyrinth_create_from_file("save_test.lab", two_player);
     }
+    else self->labyrinth = labyrinth_create(width, height, two_player);
+
+    if (use_file) {
+        self->need_generate = FALSE;
+        if (is_animated)
+            self->need_solve = TRUE;
+        else
+            self->need_solve = FALSE;
+
+    } else {
+        if (is_animated)
+            self->need_generate = TRUE;
+        else {
+            labyrinth_generator_Kruskal(self->labyrinth, FALSE);
+            self->need_generate = FALSE;
+        }
+        self->need_solve = FALSE;
+    }
+
     self->two_players = two_player;
 
     self->player = self->labyrinth->start_case;
     self->player2 = self->labyrinth->start_case2;
-
-
-    self->need_solve = FALSE;
 
     return self;
 }

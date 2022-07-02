@@ -9,13 +9,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
-
-#define MAP_WIDTH 30
-#define MAP_HEIGHT 30
+#define MAP_WIDTH 40
+#define MAP_HEIGHT 40
 
 #define DEFAULT_WIN_WIDTH 920
 #define DEFAULT_WIN_HEIGHT 920
+
+#define GUI_SCALE = 2;
 
 #define BOOL int
 #define TRUE 1

@@ -18,6 +18,8 @@ enum mods {
 };
 typedef enum mods mods;
 
+struct main_screen;
+
 //struct mod {
 //
 //    mods type;
@@ -42,6 +44,11 @@ struct window {
 
     SDL_bool quit;
 
+    TTF_Font* arial;
+
+    int width;
+    int height;
+    BOOL useFile;
 };
 
 typedef struct window window;
@@ -53,5 +60,14 @@ void window_loop_start(window* self);
 void window_main_menu(window* self);
 
 void window_destroy(window* self);
+
+void start_solo(window* self, struct main_screen*);
+
+void start_two(window* self, struct main_screen*);
+
+void start_create(window* self, struct  main_screen*);
+
+void start_animated(window* self, struct main_screen*);
+void quit_game(window* self, struct main_screen* ms);
 
 #endif //LABY_WINDOW_H
